@@ -27,6 +27,13 @@ app.get('/api/:tx', async (req, res) => {
   const oprParts = await getOPReturnData(req.params.tx)
 
   switch (oprParts[1].toString()) {
+    case 'meta':
+      // Metanet protocol
+      res.status(200)
+      res.contentType(oprParts[6].toString())
+      res.send(oprParts[5])
+      break
+
     case '1ChDHzdd1H4wSjgGMHyndZm6qxEDGjqpJL':
       // BCAT part
       res.status(200)

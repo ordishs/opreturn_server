@@ -35,8 +35,14 @@ app.get('/api/:tx', async (req, res) => {
       case 'meta':
         // Metanet protocol
         res.status(200)
-        res.contentType(oprParts[6].toString())
-        res.send(oprParts[5])
+
+        if (oprParts[4].toString() === '19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut') {
+          res.contentType(oprParts[6].toString())
+          res.send(oprParts[5])
+        } else {
+          res.contentType('text/plain')
+          res.send(oprParts[4])
+        }
         break
 
       case '1ChDHzdd1H4wSjgGMHyndZm6qxEDGjqpJL':

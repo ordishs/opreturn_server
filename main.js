@@ -15,7 +15,7 @@ async function getOPReturnData (txhash) {
 
   const txOuts = json.vout.map(out => Buffer.from(out.scriptPubKey.hex, 'hex'))
 
-  const opReturns = txOuts.filter(out => out[0] === 0x6a)
+  const opReturns = txOuts.filter(out => out[0] === 0x6a || (out[0] === 0x00 && out[1] === 0x6a))
 
   if (opReturns.length === 0) {
     throw new Error('no op_return transaction outputs')
@@ -30,6 +30,11 @@ async function getOPReturnData (txhash) {
 app.get('/api/:tx', async (req, res) => {
   try {
     const oprParts = await getOPReturnData(req.params.tx)
+
+    // If this is the new OP_FALSE OP_RETURN format, remove the prepending OP_FALSE
+    if (oprParts[0] === 0x00 && oprParts[1] === 0x6a) {
+      oprParts.shift()
+    }
 
     switch (oprParts[1].toString()) {
       case 'meta':
